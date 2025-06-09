@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đăng nhập</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+    }
+    .link {
+      display: block;
+      margin: 8px 0;
+      text-align: right;
+      color: #007bff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .link:hover {
+      text-decoration: underline;
+    }
+    #registerForm, #forgotForm {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Đăng nhập</h2>
+  <div id="loginForm">
+    <input type="text" id="username" placeholder="Tên đăng nhập">
+    <input type="password" id="password" placeholder="Mật khẩu">
+    <button onclick="login()">Đăng nhập</button>
+    <a class="link" onclick="showRegister()">Đăng ký tài khoản</a>
+    <a class="link" onclick="showForgot()">Quên mật khẩu?</a>
+    <p id="error" style="color: red;"></p>
+  </div>
+
+  <div id="registerForm">
+    <h3>Đăng ký</h3>
+    <input type="text" id="regUsername" placeholder="Tên đăng nhập">
+    <input type="password" id="regPassword" placeholder="Mật khẩu">
+    <button onclick="register()">Đăng ký</button>
+    <a class="link" onclick="showLogin()">Quay lại đăng nhập</a>
+    <p id="regError" style="color: red;"></p>
+    <p id="regSuccess" style="color: green;"></p>
+  </div>
+
+  <div id="forgotForm">
+    <h3>Quên mật khẩu</h3>
+    <input type="text" id="forgotUsername" placeholder="Tên đăng nhập">
+    <button onclick="forgotPassword()">Gửi lại mật khẩu</button>
+    <a class="link" onclick="showLogin()">Quay lại đăng nhập</a>
+    <p id="forgotMsg" style="color: green;"></p>
+  </div>
+
+  <script>
+    function showRegister() {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("registerForm").style.display = "block";
+      document.getElementById("forgotForm").style.display = "none";
+    }
+    function showLogin() {
+      document.getElementById("loginForm").style.display = "block";
+      document.getElementById("registerForm").style.display = "none";
+      document.getElementById("forgotForm").style.display = "none";
+      document.getElementById("error").innerText = "";
+      document.getElementById("regError").innerText = "";
+      document.getElementById("regSuccess").innerText = "";
+      document.getElementById("forgotMsg").innerText = "";
+    }
+    function showForgot() {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("registerForm").style.display = "none";
+      document.getElementById("forgotForm").style.display = "block";
+    }
+
+    function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      // Lấy tài khoản đã đăng ký từ localStorage
+      const regUser = localStorage.getItem("regUsername");
+      const regPass = localStorage.getItem("regPassword");
+
+      if ((username === "admin" && password === "123456") ||
+          (username === regUser && password === regPass)) {
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "index.html";
+      } else {
+        document.getElementById("error").innerText = "Sai tên đăng nhập hoặc mật khẩu.";
+      }
+    }
+
+    function register() {
+      const username = document.getElementById("regUsername").value;
+      const password = document.getElementById("regPassword").value;
+      if (!username || !password) {
+        document.getElementById("regError").innerText = "Vui lòng nhập đầy đủ thông tin.";
+        return;
+      }
+      // Lưu tài khoản vào localStorage (chỉ demo, không bảo mật)
+      localStorage.setItem("regUsername", username);
+      localStorage.setItem("regPassword", password);
+      document.getElementById("regSuccess").innerText = "Đăng ký thành công! Bạn có thể đăng nhập.";
+      document.getElementById("regError").innerText = "";
+    }
+
+    function forgotPassword() {
+      const username = document.getElementById("forgotUsername").value;
+      const regUser = localStorage.getItem("regUsername");
+      const regPass = localStorage.getItem("regPassword");
+      if (username === regUser) {
+        document.getElementById("forgotMsg").innerText = "Mật khẩu của bạn là: " + regPass;
+      } else if (username === "admin") {
+        document.getElementById("forgotMsg").innerText = "Mật khẩu của admin là: 123456";
+      } else {
+        document.getElementById("forgotMsg").innerText = "Không tìm thấy tài khoản này.";
+      }
+    }
+  </script>
+</body>
+</html>
