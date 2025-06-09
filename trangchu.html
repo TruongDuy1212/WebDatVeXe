@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trang chủ – Đặt vé xe tuyến cố định</title>
+  <style>
+    body, html { margin:0; padding:0; font-family: 'Poppins', sans-serif; background:#f7f9fc; }
+    header { background:#0056b3; color:#fff; padding:1rem; text-align:center; }
+    nav a { color:#fff; margin:0 1rem; text-decoration:none; }
+    .hero { position:relative; background:url('bus-hero.jpg') center/cover no-repeat; height:60vh; display:flex; align-items:center; justify-content:center; }
+    .search-form { background:rgba(255,255,255,0.9); padding:2rem; border-radius:8px; max-width:600px; width:100%; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
+    .search-form .row { display:flex; gap:1rem; flex-wrap:wrap; }
+    .search-form select, .search-form input[type=date], .search-form button {
+      flex:1; padding:0.8rem; border:1px solid #ccc; border-radius:4px;
+    }
+    .search-form button { background:#007bff; border:none; color:#fff; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Xe Tuyến Cố Định</h1>
+  <nav>
+    <a href="trangchu.html">Trang chủ</a>
+    <a href="#">Tuyến xe</a>
+    <a href="#">Tin tức</a>
+    <a href="#">Liên hệ</a>
+    <a href="login.html">Đăng nhập</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <form class="search-form" onsubmit="return searchTrips();">
+    <div class="row">
+      <select id="from" required>
+        <option value="" disabled selected>Điểm đi</option>
+        <option>Hồ Chí Minh</option>
+        <option>Đà Nẵng</option>
+        <option>Hà Nội</option>
+      </select>
+      <select id="to" required>
+        <option value="" disabled selected>Điểm đến</option>
+        <option>Đà Lạt</option>
+        <option>Nha Trang</option>
+        <option>Huế</option>
+      </select>
+      <input type="date" id="date" required />
+      <button type="submit">Tìm chuyến</button>
+    </div>
+  </form>
+</section>
+
+<div id="trip-results" style="max-width:600px;margin:32px auto 0;"></div>
+
+<script>
+const trips = [
+  {
+    from: "Hồ Chí Minh",
+    to: "Đà Lạt",
+    date: "2025-06-05",
+    price: 150000,
+    bus: "Xe khách A",
+    time: "08:00"
+  },
+  {
+    from: "Hồ Chí Minh",
+    to: "Nha Trang",
+    date: "2025-06-05",
+    price: 200000,
+    bus: "Xe khách B",
+    time: "14:00"
+  },
+  {
+    from: "Hồ Chí Minh",
+    to: "Huế",
+    date: "2025-06-05",
+    price: 400000,
+    bus: "Xe khách C",
+    time: "09:00"
+  }
+];
+
+function searchTrips() {
+  const from = document.getElementById('from').value;
+  const to = document.getElementById('to').value;
+  const date = document.getElementById('date').value;
+  const results = trips.filter(trip =>
+    trip.from === from && trip.to === to && trip.date === date
+  );
+  const resultDiv = document.getElementById('trip-results');
+  if (results.length === 0) {
+    resultDiv.innerHTML = "<p>Không tìm thấy chuyến phù hợp.</p>";
+  } else {
+    resultDiv.innerHTML = results.map(trip => `
+      <div style="background:#fff;border-radius:8px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px #0001;">
+        <h3>${trip.from} → ${trip.to}</h3>
+        <p>Nhà xe: <b>${trip.bus}</b></p>
+        <p>Giờ xuất phát: <b>${trip.time}</b></p>
+        <p>Giá vé: <b>${trip.price.toLocaleString()}đ</b></p>
+        <p>Ngày đi: <b>${trip.date}</b></p>
+      </div>
+    `).join('');
+  }
+  return false;
+}
+</script>
