@@ -1,1 +1,0 @@
--- Câu lệnh SQL tạo CSDL
